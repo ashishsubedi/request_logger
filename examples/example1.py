@@ -1,8 +1,8 @@
 # examples/example1.py
 
-from request_logger.request_logger import RequestLogger
-from request_logger.replayer import Replayer
-from request_logger.storage.file import FileStorage
+from request_logger.core.request_logger import RequestLogger
+from request_logger.core.replayer import Replayer
+from request_logger.core.storage.file import FileStorage
 
 import requests
 import io

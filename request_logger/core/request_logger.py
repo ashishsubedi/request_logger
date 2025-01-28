@@ -5,7 +5,7 @@ from typing import Any, Dict, Callable
 from functools import wraps
 import requests
 from requests.models import Request
-from request_logger.storage import AbstractStorage, FileStorage
+from request_logger.core.storage import AbstractStorage, FileStorage
 
 class RequestLogger:
     def __init__(self, storage: AbstractStorage = FileStorage()):

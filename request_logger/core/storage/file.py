@@ -1,7 +1,7 @@
 import os
 import json
 from typing import Any, Dict, List
-from request_logger.storage import AbstractStorage
+from request_logger.core.storage import AbstractStorage
 
 class FileStorage(AbstractStorage):
     def __init__(self, directory: str = "request_logs"):

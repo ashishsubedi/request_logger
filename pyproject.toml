@@ -3,7 +3,6 @@ requires = ["setuptools>=40.8.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-
 name = "request-logger"
 version = "0.1.0"
 description = "A Python package for logging and replaying HTTP requests"
@@ -20,7 +19,25 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["boto3>=1.36.7", "requests>=2.32.3"]
+dependencies = [
+    "requests>=2.32.3",
+    "boto3>=1.36.7",
+]
 
 [project.optional-dependencies]
 postgres = ["psycopg2>=2.8.6"]
+web = [
+    "fastapi>=0.115.7",
+    "uvicorn>=0.33.0",
+    "jinja2>=3.1.5",
+]
+
+[tool.setuptools.packages.find]
+include = ["request_logger", "request_logger.cli", "request_logger.web"]
+
+[tool.setuptools.package-data]
+"request_logger.web" = ["templates/*", "static/css/*", "static/js/*"]
+
+[project.scripts]
+request-logger-web = "request_logger.web.main:run_app"
+

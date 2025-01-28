@@ -1,7 +1,7 @@
 
 # Not Implemented
 
-from request_logger.storage import AbstractStorage
+from request_logger.core.storage import AbstractStorage
 
 class PostgresStorage(AbstractStorage):
     def __init__(self, db):

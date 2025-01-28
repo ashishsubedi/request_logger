@@ -2,7 +2,7 @@
 import json
 import boto3
 from typing import Any, Dict, List
-from request_logger.storage import AbstractStorage
+from request_logger.core.storage import AbstractStorage
 
 class S3Storage(AbstractStorage):
     def __init__(

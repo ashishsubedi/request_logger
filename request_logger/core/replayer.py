@@ -1,7 +1,7 @@
 import base64
 from typing import Any, Dict, Optional
 import requests
-from request_logger.storage import AbstractStorage
+from request_logger.core.storage import AbstractStorage
 
 class Replayer:
     def __init__(self, storage: AbstractStorage):
