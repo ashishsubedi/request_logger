@@ -25,17 +25,12 @@ class RequestLogger:
         req = Request(method=method.upper(), url=url, **kwargs)
         prepared = req.prepare()
 
-        # Process files separately to handle file objects
+        data = kwargs.get('data')
+        json_data = kwargs.get('json')
         files = kwargs.get('files')
+
         processed_files = self._process_files(files) if files else None
-
-        body = prepared.body
-        if isinstance(body, bytes):
-            body = base64.b64encode(body).decode('utf-8')
-            body_is_encoded = True
-        else:
-            body_is_encoded = False
-
+        
         # Prepare the request data to be saved
         request_data = {
             'id': request_id,
@@ -43,10 +38,10 @@ class RequestLogger:
             'method': method.upper(),
             'url': prepared.url,
             'headers': dict(prepared.headers),
-            'body': body,
-            'body_is_encoded': body_is_encoded,
+            'data': self._process_data(data),
+            'json': json_data,
             'files': processed_files,
-            'original_kwargs': self._sanitize_kwargs(kwargs),
+            'original_kwargs': self._sanitize_kwargs(kwargs),            
         }
 
         # Save request data
@@ -92,6 +87,25 @@ class RequestLogger:
                 # Handle the case where file_info is not a tuple/list
                 processed_files[key] = str(file_info)
         return processed_files
+
+
+    def _process_data(self, data):
+        """
+        Process data to make it serializable.
+        """
+        if data is None:
+            return None
+        if isinstance(data, bytes):
+            # Encode bytes data with base64
+            encoded_data = base64.b64encode(data).decode('utf-8')
+            return {'content': encoded_data, 'is_base64': True}
+        elif isinstance(data, str):
+            return {'content': data, 'is_base64': False}
+        elif isinstance(data, dict):
+            return data  # Assume it's serializable
+        else:
+            # Handle other data types as needed
+            return {'content': str(data), 'is_base64': False}
 
     def _sanitize_kwargs(self, kwargs):
         """

@@ -1,0 +1,67 @@
+<!-- request_logger/web/templates/modify_form.html -->
+<form 
+  hx-post="/request/{{ request_data['id'] }}/modify_replay" 
+  hx-target="#result" 
+  hx-swap="innerHTML"
+  class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6"
+>
+  <!-- Method -->
+  <div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2">Method:</label>
+    <input 
+      type="text" 
+      name="method" 
+      value="{{ request_data['method'] }}" 
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+    >
+  </div>
+
+  <!-- URL -->
+  <div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2">URL:</label>
+    <input 
+      type="text" 
+      name="url" 
+      value="{{ request_data['url'] }}" 
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+    >
+  </div>
+
+  <!-- Headers -->
+  <div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2">Headers (JSON format):</label>
+    <textarea 
+      name="headers" 
+      rows="5" 
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+    >{{ request_data['headers'] | tojson(indent=2) }}</textarea>
+  </div>
+
+  <!-- Body -->
+  <div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2">Body:</label>
+    <textarea 
+      name="body" 
+      rows="10" 
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+    >{{ request_data['decoded_body'] | e }}</textarea>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="flex items-center justify-between">
+    <button 
+      type="submit" 
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    >
+      Submit
+    </button>
+    <!-- Cancel Button -->
+    <button 
+      type="button" 
+      onclick="document.getElementById('modify-form').innerHTML=''" 
+      class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    >
+      Cancel
+    </button>
+  </div>
+</form>

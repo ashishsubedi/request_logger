@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">Logged Requests</h2>
+{% if request_ids %}
+<ul class="list-disc pl-5">
+    {% for request_id in request_ids %}
+    <li class="mb-2">
+        <a href="/request/{{ request_id }}" 
+           hx-get="/request/{{ request_id }}" 
+           hx-target="#details" 
+           hx-swap="innerHTML"
+           class="text-blue-500 hover:underline"
+        >
+            {{ request_id }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="text-gray-600">No logged requests found.</p>
+{% endif %}
+
+<div id="details" class="mt-6">
+    <!-- Request details will be loaded here via HTMX -->
+</div>
+{% endblock %}

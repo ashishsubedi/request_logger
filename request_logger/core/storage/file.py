@@ -20,7 +20,8 @@ class FileStorage(AbstractStorage):
     def load_request(self, request_id: str) -> Dict[str, Any]:
         file_path = self._get_file_path(request_id)
         with open(file_path, 'r') as f:
-            return json.load(f)
+            request_data = json.load(f)
+        return request_data
 
     def list_requests(self) -> List[str]:
         files = os.listdir(self.directory)

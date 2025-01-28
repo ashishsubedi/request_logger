@@ -1,0 +1,51 @@
+/* request_logger/web/static/css/styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1669c7;
+}
+
+pre {
+    background-color: #f6f8fa;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+#result {
+    margin-top: 20px;
+}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto py-6">
+  <!-- Request Details -->
+  <h2 class="text-2xl font-semibold mb-4">Request Details</h2>
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6">
+    <!-- Request Information -->
+    <div class="mb-4">
+      <p><strong>ID:</strong> {{ request_data['id'] }}</p>
+      <p><strong>Timestamp:</strong> {{ request_data['timestamp'] }}</p>
+      <p><strong>Method:</strong> {{ request_data['method'] }}</p>
+      <p><strong>URL:</strong> {{ request_data['url'] }}</p>
+    </div>
+
+    <!-- Headers -->
+    <div class="mb-4">
+      <h3 class="text-xl font-semibold mb-2">Headers</h3>
+      <pre class="bg-gray-100 p-4 rounded overflow-auto">{{ request_data['headers'] | tojson(indent=2) }}</pre>
+    </div>
+
+    <!-- Body -->
+    <div class="mb-4">
+      <h3 class="text-xl font-semibold mb-2">Body</h3>
+      <pre class="bg-gray-100 p-4 rounded overflow-auto">{{ request_data['body'] | e }}</pre>
+    </div>
+  
+
+    {% if request_data.json is defined %}
+      <!-- Json -->
+    <div class="mb-4">
+      <h3 class="text-xl font-semibold mb-2">Json</h3>
+      <pre class="bg-gray-100 p-4 rounded overflow-auto">{{ request_data['json'] | e }}</pre>
+    </div>
+    {% endif %}
+  </div>
+
+
+
+  <!-- Replay Buttons -->
+  <div class="flex items-center space-x-4 mb-6">
+    <!-- Replay Original Request -->
+    <button 
+      hx-post="/request/{{ request_data['id'] }}/replay" 
+      hx-target="#result" 
+      hx-swap="innerHTML"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    >
+      Replay Request
+    </button>
+
+    <!-- Toggle Modify Form -->
+    <button 
+      hx-get="/request/{{ request_data['id'] }}/modify_form" 
+      hx-target="#modify-form" 
+      hx-swap="innerHTML"
+      class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+    >
+      Modify and Replay
+    </button>
+  </div>
+
+  <!-- Modify Request Form -->
+  <div id="modify-form">
+    <!-- The form will be loaded here via HTMX when the 'Modify and Replay' button is clicked -->
+  </div>
+
+  <!-- Result of Replay -->
+  <div id="result" class="mt-6">
+    <!-- The result of the replay will be displayed here -->
+  </div>
+</div>
+{% endblock %}
