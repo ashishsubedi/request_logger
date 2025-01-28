@@ -21,8 +21,8 @@
 
     <!-- Body -->
     <div class="mb-4">
-      <h3 class="text-xl font-semibold mb-2">Body</h3>
-      <pre class="bg-gray-100 p-4 rounded overflow-auto">{{ request_data['body'] | e }}</pre>
+      <h3 class="text-xl font-semibold mb-2">Data</h3>
+      <pre class="bg-gray-100 p-4 rounded overflow-auto">{{ request_data['data'] | e }}</pre>
     </div>
   
 
@@ -50,14 +50,14 @@
     </button>
 
     <!-- Toggle Modify Form -->
-    <button 
+    <!-- <button 
       hx-get="/request/{{ request_data['id'] }}/modify_form" 
       hx-target="#modify-form" 
       hx-swap="innerHTML"
       class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
     >
       Modify and Replay
-    </button>
+    </button> -->
   </div>
 
   <!-- Modify Request Form -->
@@ -70,4 +70,5 @@
     <!-- The result of the replay will be displayed here -->
   </div>
 </div>
+
 {% endblock %}

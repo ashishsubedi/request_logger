@@ -39,12 +39,21 @@
 
   <!-- Body -->
   <div class="mb-4">
-    <label class="block text-gray-700 text-sm font-bold mb-2">Body:</label>
+    <label class="block text-gray-700 text-sm font-bold mb-2">Data:</label>
     <textarea 
       name="body" 
       rows="10" 
       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-    >{{ request_data['decoded_body'] | e }}</textarea>
+    >{{ request_data['data'] | e }}</textarea>
+  </div>
+  <!-- Json -->
+  <div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2">Json:</label>
+    <textarea 
+      name="body" 
+      rows="10" 
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+    >{{ request_data['json'] | tojson(indent=2) }}</textarea>
   </div>
 
   <!-- Submit Button -->

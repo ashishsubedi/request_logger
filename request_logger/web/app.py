@@ -89,6 +89,8 @@ async def modify_and_replay(request: Request, request_id: str):
 async def get_modify_form(request: Request, request_id: str):
     try:
         request_data = storage.load_request(request_id)
+        request_data.update(RequestUtil.parse_request_kwargs(request_data))
+
         return templates.TemplateResponse("modify_form.html", {"request": request, "request_data": request_data})
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Request not found")
