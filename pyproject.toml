@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+
+name = "request-logger"
+version = "0.1.0"
+description = "A Python package for logging and replaying HTTP requests"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{ name = "Ashish Subedi", email = "ashish@asubedi.com.np" }]
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["boto3>=1.36.7", "requests>=2.32.3"]
+
+[project.optional-dependencies]
+postgres = ["psycopg2>=2.8.6"]
