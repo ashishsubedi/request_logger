@@ -1,14 +1,19 @@
 import base64
 import uuid
 import datetime
-from typing import Any, Dict, Callable
+from typing import Any, Dict, Callable, List, Optional
 from functools import wraps
 import requests
 from requests.models import Request
 from request_logger.core.storage import AbstractStorage, FileStorage
 
 class RequestLogger:
-    def __init__(self, storage: AbstractStorage = FileStorage()):
+    def __init__(self, storage: AbstractStorage = None, max_logs: int = 100):
+        if storage is None:
+            storage = FileStorage(max_logs=max_logs)
+        else:
+            storage.max_logs = max_logs
+
         self.storage = storage
 
     def log_request(self, method: str, url: str, **kwargs) -> Dict[str, Any]:
@@ -19,7 +24,9 @@ class RequestLogger:
         """
         # Generate a unique request ID
         request_id = str(uuid.uuid4())
-        timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+        timestamp = datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
+
 
         # Create a Request object to handle parameter processing
         req = Request(method=method.upper(), url=url, **kwargs)
@@ -143,3 +150,10 @@ class RequestLogger:
 
         return LoggedSession()
 
+    def load_request(self, request_id: str) -> Dict[str, Any]:
+        return self.storage.load_request(request_id)
+
+    def search_requests(self, query: Dict[str, str],  start_time: Optional[str] = None, end_time: Optional[str] = None) -> List[Dict[str, Any]]:
+        return self.storage.search_requests(query, start_time=start_time, end_time=end_time)
+    def list_request_ids(self):
+        return self.storage.list_request_ids()
