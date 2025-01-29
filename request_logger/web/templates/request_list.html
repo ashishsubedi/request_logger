@@ -1,0 +1,19 @@
+{% if requests %}
+<ul class="list-disc pl-5">
+  {% for request_data in requests %}
+  <li class="mb-2">
+    <a href="/request/{{ request_data.id }}"
+       hx-get="/request/{{ request_data.id }}"
+       hx-target="#details"
+       hx-swap="innerHTML"
+       class="text-blue-500 hover:underline"
+    >
+      [{{ request_data.timestamp }}] {{ request_data.method }} - {{ request_data.url }}
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="text-gray-600">No logged requests found.</p>
+{% endif %}
+

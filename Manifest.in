@@ -1,0 +1,14 @@
+include README.md
+include LICENSE
+include pyproject.toml
+recursive-include request_logger/templates *
+recursive-include request_logger/static *
+recursive-include examples *
+recursive-include tests *
+recursive-include request_logger/cli *
+exclude __pycache__
+exclude *.py[cod]
+exclude *.egg-info
+exclude request_logs
+global-exclude __pycache__/*
+global-exclude *.py[cod]

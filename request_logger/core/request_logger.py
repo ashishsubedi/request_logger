@@ -1,7 +1,7 @@
 import base64
 import uuid
 import datetime
-from typing import Any, Dict, Callable
+from typing import Any, Dict, Callable, List, Optional
 from functools import wraps
 import requests
 from requests.models import Request
@@ -150,3 +150,10 @@ class RequestLogger:
 
         return LoggedSession()
 
+    def load_request(self, request_id: str) -> Dict[str, Any]:
+        return self.storage.load_request(request_id)
+
+    def search_requests(self, query: Dict[str, str],  start_time: Optional[str] = None, end_time: Optional[str] = None) -> List[Dict[str, Any]]:
+        return self.storage.search_requests(query, start_time=start_time, end_time=end_time)
+    def list_request_ids(self):
+        return self.storage.list_request_ids()

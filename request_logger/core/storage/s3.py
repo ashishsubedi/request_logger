@@ -18,7 +18,7 @@ class S3Storage(AbstractStorage, LogManagementMixin):
         if not timestamp:
             timestamp = datetime.datetime.now(datetime.timezone.utc)
             request_data["timestamp"] = timestamp
-            
+
         key = self._generate_key(request_id, timestamp)
         # Save the request using the mixin method
         self.save_request_with_log_management(key, request_data)
@@ -85,7 +85,5 @@ class S3Storage(AbstractStorage, LogManagementMixin):
             objects.extend(page.get('Contents', []))
         return objects
 
-    # Methods used by LogManagementMixin
     def get_sorted_identifiers(self) -> List[str]:
-        # Return keys sorted lexicographically
         return sorted(self.list_keys())

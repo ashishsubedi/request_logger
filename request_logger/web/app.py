@@ -1,5 +1,6 @@
 import html
-from fastapi import FastAPI, Request
+from typing import Optional
+from fastapi import FastAPI, Form, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -23,20 +24,27 @@ templates = Jinja2Templates(directory=str(templates_dir))
 
 # Initialize storage and logger
 storage = FileStorage(storage_dir='request_logs')
-logger = RequestLogger(storage=storage)
+r_logger = RequestLogger(storage=storage)
 replayer = Replayer(storage=storage)
+
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    # Retrieve list of request IDs
-    request_ids = storage.list_request_ids()
-    return templates.TemplateResponse("index.html", {"request": request, "request_ids": request_ids})
-
+    # Retrieve list of request data
+    request_ids = r_logger.list_request_ids()
+    requests_data = []
+    for request_id in request_ids:
+        try:
+            request_data = r_logger.load_request(request_id)
+            requests_data.append(request_data)
+        except FileNotFoundError:
+            continue
+    return templates.TemplateResponse("index.html", {"request": request, "requests": requests_data})
 
 @app.get("/request/{request_id}", response_class=HTMLResponse)
 async def request_detail(request: Request, request_id: str):
     try:
-        request_data = storage.load_request(request_id)
+        request_data = r_logger.load_request(request_id)
         request_data.update(RequestUtil.parse_request_kwargs(request_data))
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Request not found")
@@ -71,6 +79,30 @@ async def replay_request(request_id: str):
         """
         return HTMLResponse(content=html_content, status_code=500)
 
+@app.post("/request/{request_id}/replay", response_class=HTMLResponse)
+async def replay_request(request: Request, request_id: str):
+    try:
+        response = replayer.replay_request(request_id)
+        status_code = response.status_code
+        content = html.escape(response.text)
+
+        return templates.TemplateResponse("replay_result.html", {
+            "request": request,
+            "status_code": status_code,
+            "content": content,
+        })
+    except Exception as e:
+        error_message = html.escape(str(e))
+        return HTMLResponse(
+            content=f"""
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                <p class="font-bold">Error</p>
+                <p>{error_message}</p>
+            </div>
+            """, 
+            status_code=500
+        )
+
 
 @app.post("/request/{request_id}/modify_replay", response_class=HTMLResponse)
 async def modify_and_replay(request: Request, request_id: str):
@@ -88,9 +120,33 @@ async def modify_and_replay(request: Request, request_id: str):
 @app.get("/request/{request_id}/modify_form", response_class=HTMLResponse)
 async def get_modify_form(request: Request, request_id: str):
     try:
-        request_data = storage.load_request(request_id)
+        request_data = r_logger.load_request(request_id)
         request_data.update(RequestUtil.parse_request_kwargs(request_data))
 
         return templates.TemplateResponse("modify_form.html", {"request": request, "request_data": request_data})
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Request not found")
+
+
+@app.post("/search", response_class=HTMLResponse)
+async def search_requests(
+    request: Request,
+    method: Optional[str] = Form(None),
+    url: Optional[str] = Form(None),
+    start_time: Optional[str] = Form(None),
+    end_time: Optional[str] = Form(None)
+):
+    # Build query dictionary
+    query = {}
+    if method:
+        query['method'] = method.upper()
+    if url:
+        query['url'] = url
+
+    # Perform the search
+    try:
+        results = r_logger.search_requests(query, start_time=start_time, end_time=end_time)
+    except ValueError as e:
+        return HTMLResponse(content=f"<p class='text-red-500'>Error: {str(e)}</p>", status_code=400)
+
+    return templates.TemplateResponse("request_list.html", {"request": request, "requests": results})
