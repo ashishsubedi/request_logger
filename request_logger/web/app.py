@@ -22,14 +22,14 @@ templates_dir = Path(__file__).parent / "templates"
 templates = Jinja2Templates(directory=str(templates_dir))
 
 # Initialize storage and logger
-storage = FileStorage(directory='request_logs')
+storage = FileStorage(storage_dir='request_logs')
 logger = RequestLogger(storage=storage)
 replayer = Replayer(storage=storage)
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     # Retrieve list of request IDs
-    request_ids = storage.list_requests()
+    request_ids = storage.list_request_ids()
     return templates.TemplateResponse("index.html", {"request": request, "request_ids": request_ids})
 
 

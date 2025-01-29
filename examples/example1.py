@@ -8,8 +8,8 @@ import requests
 import io
 
 # Initialize the logger and storage
-storage = FileStorage(directory='request_logs')
-logger = RequestLogger(storage=storage)
+storage = FileStorage(storage_dir='request_logs')
+logger = RequestLogger(storage=storage, max_logs=10)
 replayer = Replayer(storage=storage)
 
 # Prepare request details
@@ -38,3 +38,13 @@ print(f"Response body: {response.text}")
 replay_response = replayer.replay_request(request_id)
 print(f"Replayed request status code: {replay_response.status_code}")
 print(f"Replayed response body: {replay_response.text}")
+
+
+# Log some requests
+for i in range(50):
+    logger.log_request('GET', f'https://example.com/api/{i}')
+
+# Verify that only the latest 100 logs are kept
+print(f"Total logs: {len(logger.storage.list_request_ids())}")  # Should print 100
+
+# The oldest logs have been deleted without loading their data
